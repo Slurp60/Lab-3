@@ -1,5 +1,5 @@
 /*
- * Lab2Experimentsl.c
+ * Lab3Task1.c
  *
  * Created: 02/11/2022 17:39:17
  * Author : yeah-
@@ -8,6 +8,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#define F_CPU 16000000
 #define BAUDRATE 9600
 #define BAUD_PRESCALLER (((F_CPU / (BAUDRATE * 16UL))) - 1)
 
@@ -24,21 +25,22 @@ return UDR0; // Read data from UDR
 
 int main()
 {
-DDRD |= 1 << PIND4;
-PORTD = 0x00;
-USART_init(); // USART initialization
-while(1)
-{
-ReceivedChar = USART_receive(); // Wait until data is received
-if (ReceivedChar == 'N')
-{
-cbi(PORTD, PIND4); // Clear bit 4 to turn off LED
-_delay_ms(200);
-}
-if (ReceivedChar == 'Y')
-{
-sbi(PORTD, PIND4); // set bit 4 to turn on LED
-_delay_ms(200);
-}
-}
+	DDRD |= 1 << PIND4;
+	PORTD = 0x00;
+	USART_init(); // USART initialization
+	while(1)
+	{
+	ReceivedChar = USART_receive(); // Wait until data is received
+		if (ReceivedChar == 'N')
+		{
+		PORTD = 0x00; // Clear bit 4 to turn off LED
+
+		}
+		if (ReceivedChar == 'Y')
+		{
+		PORTD = 0x08; //sbi(PORTD, PIND4); // set bit 4 to turn on LED
+
+		}
+	}
+	return 0;
 }
