@@ -11,6 +11,7 @@
 #define F_CPU 16000000
 #define BAUDRATE 9600
 #define BAUD_PRESCALLER (((F_CPU / (BAUDRATE * 16UL))) - 1)
+unsigned char ReceivedChar;
 
 void USART_init(void){
 UBRR0H = (uint8_t)(BAUD_PRESCALLER>>8); //set baud rate
@@ -22,24 +23,27 @@ UCSR0C = (3<<UCSZ00); //set 8-bit (default)
 unsigned char USART_receive(void){
 while(!(UCSR0A & (1<<RXC0))); // Wait to receive data
 return UDR0; // Read data from UDR
+}
 
 int main()
 {
-	DDRD |= 1 << PIND4;
+	DDRD |= 1 << DDD3;
 	PORTD = 0x00;
 	USART_init(); // USART initialization
 	while(1)
 	{
+		
 	ReceivedChar = USART_receive(); // Wait until data is received
 		if (ReceivedChar == 'N')
 		{
+			
 		PORTD = 0x00; // Clear bit 4 to turn off LED
-
 		}
 		if (ReceivedChar == 'Y')
 		{
-		PORTD = 0x08; //sbi(PORTD, PIND4); // set bit 4 to turn on LED
-
+			
+		PORTD |= (1<<PORTD3); //sbi(PORTD, PIND4); // set bit 4 to turn on LED
+		
 		}
 	}
 	return 0;
